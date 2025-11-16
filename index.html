@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarSeley - Car Selector</title>
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/743/743131.png">
+<style>
+:root {
+  --bg-color: #e0e0e0;
+  --card-bg: #e0e0e0;
+  --text-color: #333;
+  --input-bg: #e0e0e0;
+  --shadow-light: 8px 8px 16px #bebebe, -8px -8px 16px #ffffff;
+  --shadow-inset-light: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+}
+[data-theme="dark"] {
+  --bg-color: #1e1e1e;
+  --card-bg: #2a2a2a;
+  --text-color: #f5f5f5;
+  --input-bg: #2a2a2a;
+  --shadow-light: 8px 8px 16px #151515, -8px -8px 16px #333333;
+  --shadow-inset-light: inset 6px 6px 12px #151515, inset -6px -6px 12px #333333;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  transition: 0.3s all ease;
+}
+.app-container {
+  background-color: var(--card-bg);
+  padding: 30px 20px 50px 20px;
+  border-radius: 25px;
+  box-shadow: var(--shadow-light);
+  width: 90%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: relative;
+}
+h1 { text-align: center; margin: 0; }
+input, select, button {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  transition: 0.3s all ease;
+  color: var(--text-color);
+  background-color: var(--input-bg);
+  box-shadow: var(--shadow-inset-light);
+}
+button {
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+}
+button:hover {
+  box-shadow: var(--shadow-inset-light);
+}
+#carImage {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  margin-top: 10px;
+  display: none;
+}
+/* Dark mode toggle button */
+#darkModeToggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s all ease;
+}
+#darkModeToggle img { width: 24px; height: 24px; }
+/* Currency toggle */
+#currencyToggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.currency-btn {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+  background-color: var(--card-bg);
+  font-weight: bold;
+  transition: 0.3s all ease;
+}
+.currency-btn.active { box-shadow: var(--shadow-inset-light); }
+/* Search input for Make */
+#makeSearch {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: var(--text-color);
+  background-color: var(--input-bg);
+  box-shadow: var(--shadow-inset-light);
+  margin-bottom: 5px;
+  transition: 0.3s all ease;
+}
+/* Footer inside app container */
+.app-footer {
+  margin-top: auto;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-color);
+}
+@media (max-width: 500px) { .app-container { padding: 20px 15px 50px 15px; } }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="app-container">
+  <!-- Dark Mode Toggle -->
+  <button id="darkModeToggle">
+    <img id="toggleIcon" src="https://cdn-icons-png.flaticon.com/512/1164/1164954.png" alt="Toggle">
+  </button>
+
+  <h1>CarSeley</h1>
+
+  <!-- Currency Toggle -->
+  <div id="currencyToggle">
+    <button class="currency-btn active" data-currency="INR">₹ INR</button>
+    <button class="currency-btn" data-currency="USD">$ USD</button>
+  </div>
+
+  <!-- Searchable Make -->
+  <label for="makeSearch">Search / Select Make:</label>
+  <input type="text" id="makeSearch" placeholder="Type to search make...">
+  <select id="make"><option value="">Select Make</option></select>
+
+  <label for="model">Select Model:</label>
+  <select id="model"><option value="">Select Make First</option></select>
+
+  <label for="year">Select Year:</label>
+  <select id="year"><option value="">Select Model First</option></select>
+
+  <label for="fuel">Fuel Type:</label>
+  <select id="fuel">
+    <option value="">Select Fuel Type</option>
+    <option value="Petrol">Petrol</option>
+    <option value="Diesel">Diesel</option>
+    <option value="Electric">Electric</option>
+    <option value="Hybrid">Hybrid</option>
+  </select>
+
+  <label for="price">Price Range:</label>
+  <select id="price"><option value="">Select Price Range</option></select>
+
+  <label for="country">Country:</label>
+  <select id="country">
+    <option value="">Select Country</option>
+    <option value="India">India</option>
+    <option value="USA">USA</option>
+    <option value="Germany">Germany</option>
+    <option value="Japan">Japan</option>
+    <option value="Korea">Korea</option>
+    <option value="Italy">Italy</option>
+    <option value="France">France</option>
+  </select>
+
+  <button id="showSelection">Show Selection</button>
+  <p id="result"></p>
+  <img id="carImage" src="" alt="Car Image">
+
+  <!-- Footer inside app container -->
+  <footer class="app-footer">© Manik Roy 2025. All Rights Reserved.</footer>
+</div>
+
+<script>
+// Dark mode toggle
+const darkToggle = document.getElementById('darkModeToggle');
+const toggleIcon = document.getElementById('toggleIcon');
+darkToggle.addEventListener('click', () => {
+  if(document.body.getAttribute('data-theme') === 'light') {
+    document.body.setAttribute('data-theme', 'dark');
+    toggleIcon.src = "https://cdn-icons-png.flaticon.com/512/869/869869.png"; // moon
+  } else {
+    document.body.setAttribute('data-theme', 'light');
+    toggleIcon.src = "https://cdn-icons-png.flaticon.com/512/1164/1164954.png"; // sun
+  }
+});
+
+// Elements
+const makeSearch = document.getElementById('makeSearch');
+const makeSelect = document.getElementById('make');
+const modelSelect = document.getElementById('model');
+const yearSelect = document.getElementById('year');
+const priceSelect = document.getElementById('price');
+const result = document.getElementById('result');
+const carImage = document.getElementById('carImage');
+let currentCurrency = "INR";
+
+// Currency toggle
+document.querySelectorAll('.currency-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.currency-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCurrency = btn.dataset.currency;
+    populatePriceRanges();
+  });
+});
+
+// Populate price ranges
+function populatePriceRanges() {
+  const rangesINR = ["0-500000","500001-1000000","1000001-2000000","2000001-5000000","5000001+"];
+  const rangesUSD = ["0-10000","10001-30000","30001-50000","50001-100000","100001+"];
+  priceSelect.innerHTML = '<option value="">Select Price Range</option>';
+  const ranges = currentCurrency==="INR"?rangesINR:rangesUSD;
+  ranges.forEach(r=>{
+    const option = document.createElement('option');
+    option.value = r;
+    option.textContent = currentCurrency==="INR"?"₹"+r.replace(/-/," - ₹"): "$"+r.replace(/-/," - $");
+    priceSelect.appendChild(option);
+  });
+}
+
+// Populate years
+function populateYears() {
+  yearSelect.innerHTML = '<option value="">Select Year</option>';
+  const currentYear = new Date().getFullYear();
+  for (let y = currentYear; y >= 1980; y--) {
+    const option = document.createElement('option');
+    option.value = y;
+    option.textContent = y;
+    yearSelect.appendChild(option);
+  }
+}
+
+// Indian makes/models
+const indianMakes = ["Maruti","Hyundai","Tata","Mahindra","Honda","Toyota"];
+const indianModels = {
+  "Maruti":["Swift","Baleno","Dzire","Alto"],
+  "Hyundai":["i20","Creta","Verna"],
+  "Tata":["Nexon","Harrier","Tiago"],
+  "Mahindra":["Thar","XUV700","Bolero"],
+  "Honda":["City","Amaze","WR-V"],
+  "Toyota":["Fortuner","Innova","Yaris"]
+};
+
+// Fetch makes
+async function fetchMakes() {
+  const res = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json');
+  const data = await res.json();
+  const usMakes = data.Results.map(item => item.Make_Name).filter(m=>!indianMakes.includes(m));
+  const allMakes = [...indianMakes, ...usMakes].sort((a,b)=>a.localeCompare(b));
+  makeSelect.innerHTML = '<option value="">Select Make</option>';
+  allMakes.forEach(make=>{
+    const option = document.createElement('option');
+    option.value = make;
+    option.textContent = make;
+    makeSelect.appendChild(option);
+  });
+}
+
+// Search filtering for Make dropdown
+makeSearch.addEventListener('input', () => {
+  const query = makeSearch.value.toLowerCase();
+  for (let i = 0; i < makeSelect.options.length; i++) {
+    const option = makeSelect.options[i];
+    option.style.display = option.text.toLowerCase().includes(query) ? '' : 'none';
+  }
+});
+
+// When user selects a make from dropdown, update search box and reset model/year
+makeSelect.addEventListener('change', () => {
+  makeSearch.value = makeSelect.value;
+  const make = makeSelect.value;
+  modelSelect.innerHTML = '<option value="">Select Model</option>';
+  yearSelect.innerHTML = '<option value="">Select Model First</option>';
+  if(make) fetchModels(make);
+});
+
+// Fetch models
+async function fetchModels(make){
+  if(indianMakes.includes(make)){
+    const models = indianModels[make].sort();
+    modelSelect.innerHTML = '<option value="">Select Model</option>';
+    models.forEach(m=>{
+      const option = document.createElement('option');
+      option.value = m;
+      option.textContent = m;
+      modelSelect.appendChild(option);
+    });
+  } else {
+    modelSelect.innerHTML = '<option value="">Loading...</option>';
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${make}?format=json`);
+    const data = await res.json();
+    const models = data.Results.map(item=>item.Model_Name).sort();
+    modelSelect.innerHTML = '<option value="">Select Model</option>';
+    models.forEach(m=>{
+      const option = document.createElement('option');
+      option.value = m;
+      option.textContent = m;
+      modelSelect.appendChild(option);
+    });
+  }
+  yearSelect.innerHTML = '<option value="">Select Model First</option>';
+}
+
+// Trigger year population on model select
+modelSelect.addEventListener('change', () => {
+  if(modelSelect.value) populateYears();
+  else yearSelect.innerHTML = '<option value="">Select Model First</option>';
+});
+
+// Show selection and real-time image
+document.getElementById('showSelection').addEventListener('click', async ()=>{
+  const make = makeSelect.value;
+  const model = modelSelect.value;
+  const year = yearSelect.value;
+  const fuel = document.getElementById('fuel').value;
+  const price = priceSelect.value;
+  const country = document.getElementById('country').value;
+
+  if(make && model && year && fuel && price && country){
+    result.textContent = `You selected: ${make} ${model} (${year}) - ${fuel}, ${price}, ${country}`;
+    try{
+      const imgRes = await fetch(`https://www.carimagery.com/api.asmx/GetImageUrl?searchTerm=${encodeURIComponent(make+" "+model)}`);
+      const imgText = await imgRes.text();
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(imgText,"text/xml");
+      const url = xml.getElementsByTagName("string")[0].textContent;
+      if(url){ carImage.src=url; carImage.style.display='block'; } 
+      else carImage.style.display='none';
+    } catch(err){ carImage.style.display='none'; }
+  } else { result.textContent='Please select all fields.'; carImage.style.display='none'; }
+});
+
+// Initialize
+fetchMakes();
+populatePriceRanges();
+</script>
+</body>
+</html>
